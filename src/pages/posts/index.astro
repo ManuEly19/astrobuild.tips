@@ -1,13 +1,13 @@
 ---
-import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
-import Card from '../components/Card.astro';
-import Layout from '../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Hero from '../../components/Hero.astro';
+import Card from '../../components/Card.astro';
+import Layout from '../../layouts/Layout.astro';
 
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-const allPosts = await getCollection('posts');
-
+const posts = (await getCollection('posts')).sort(
+	(a, b) => new Date(a.data.date).valueOf() - new Date(b.data.date).valueOf());
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
@@ -16,12 +16,12 @@ const allPosts = await getCollection('posts');
  	<Header title="Aprendiendo Astro" />
 	<Hero />
 	<ul role="list" class="link-card-grid"></ul>
-		{allPosts.map((item: CollectionEntry<'posts'>) => (
+		{posts.map((post: CollectionEntry<'posts'>) => (
 			<Card
-            title={item.data.title}
-            time={item.data.date}
-            tags={item.data.tags}
-			slug='/'
+            title={post.data.title}
+            time={post.data.date}
+            tags={post.data.tags}
+			slug={post.id}
           />
 		))}
 	</ul>

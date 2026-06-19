@@ -1,0 +1,35 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Posts from '../../layouts/Posts.astro';
+import Header from '../../components/Header.tsx';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post: any) => ({
+    params: { slug: post.id },
+    props: post ,
+  }));
+}
+
+const post = Astro.props;
+const { Content } = await render(post as CollectionEntry<'posts'>);
+---
+<Base title="Do not be afraid">
+  <Posts
+    content={{
+      title: post.data.title,
+      date: post.data.date,
+      description: post.data.description,
+      image: post.data.image,
+      tags: post.data.tags,
+    }}
+  >
+  <div class="text-gray-500">
+    <Header title={post.data.title} />
+    <Content />
+
+  </div>
+  </Posts>
+</Base>
